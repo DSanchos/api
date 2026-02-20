@@ -24,14 +24,7 @@ export function defineApi<T extends Record<string, API>>(props: T) {
   return props;
 }
 
-ApiCore({
-  baseUrl: "https://jsonplaceholder.typicode.com",
-  baseKeepUnusedDataFor: 0,
-  baseHeader: {},
-  interceptors: {
-    request: (props) => ({
-      ...props,
-      headers: { Authorization: `Bearer ${"string"}` },
-    }),
-  },
-});
+// Планы на будущее!
+// retry.ts        — повтор запроса при ошибке (retryCount, retryDelay)
+// queue.ts        — очередь запросов (не слать 100 запросов одновременно)
+// abort.ts        — отмена запроса через AbortController
