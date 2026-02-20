@@ -9,7 +9,7 @@ A lightweight TypeScript fetch wrapper with caching, polling, interceptors, and 
 ## Installation / Установка
 
 ```bash
-npm install node-fetch
+npm i @dsanchos/api
 ```
 
 ---

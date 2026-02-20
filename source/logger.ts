@@ -1,4 +1,4 @@
-export function logger(
+export function Logger(
   method: string,
   url: string,
   status: number,

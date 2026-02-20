@@ -1,16 +1,23 @@
-import type { API, CORE } from "./api.types.ts";
+import type { API, CORE } from "./api.types.js";
 
 const config: CORE = {
   baseUrl: "",
   baseKeepUnusedDataFor: 60,
   baseHeader: {},
   interceptors: {},
+  logger: true,
 };
 
 export function ApiCore(props: CORE) {
   config.baseUrl = props.baseUrl;
   config.baseKeepUnusedDataFor = props.baseKeepUnusedDataFor;
+
   config.baseHeader = props.baseHeader;
+
+  if (props.logger) {
+    config.logger = props.logger;
+  }
+
   if (props.interceptors) {
     config.interceptors = props.interceptors;
   }
@@ -20,7 +27,7 @@ export function getConfig() {
   return config;
 }
 
-export function defineApi<T extends Record<string, API>>(props: T) {
+export function defineApi<T extends Record<string, API<any>>>(props: T): T {
   return props;
 }
 

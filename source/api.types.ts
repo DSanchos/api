@@ -26,11 +26,11 @@ export type Headers = {
   [K in keyof headersMap]?: headersMap[K];
 };
 
-export interface API {
+export interface API<TResponse = any, TBody = any> {
   method: METHODS;
   url: string;
   headers?: Headers;
-  body?: any;
+  body?: TBody;
   keepUnusedDataFor?: number;
   pollingInterval?: number;
   stopAfter?: number;
@@ -38,8 +38,8 @@ export interface API {
   invalidateCache?: string[];
 }
 
-export interface APIResponse {
-  data: any;
+export interface APIResponse<TResponse = any> {
+  data: TResponse | null;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -56,4 +56,5 @@ export interface CORE {
     request?: (props: API) => API | Promise<API>;
     response?: (res: APIResponse) => APIResponse | Promise<APIResponse>;
   };
+  logger?: boolean;
 }

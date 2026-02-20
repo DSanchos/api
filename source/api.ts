@@ -1,12 +1,13 @@
-import fetch from "node-fetch";
-import type { API, APIResponse, CacheEntry } from "./api.types.ts";
-import { getConfig } from "./core.ts";
-import { logger } from "./logger.ts";
+import type { API, APIResponse, CacheEntry } from "./api.types.js";
+import { getConfig } from "./core.js";
+import { Logger } from "./logger.js";
 
 const cache = new Map<string, CacheEntry>();
 
-export async function api(props: API): Promise<APIResponse> {
-  const { baseUrl, baseKeepUnusedDataFor, baseHeader, interceptors } =
+export async function api<TResponse = any, TBody = any>(
+  props: API<TResponse, TBody>,
+): Promise<APIResponse<TResponse>> {
+  const { baseUrl, baseKeepUnusedDataFor, baseHeader, interceptors, logger } =
     getConfig();
 
   const finalProps = interceptors?.request
@@ -23,7 +24,7 @@ export async function api(props: API): Promise<APIResponse> {
     invalidateCache = "",
   } = finalProps;
 
-  let data = null;
+  let data: any = null;
   let isLoading = true;
   let isFetching = true;
   let isError = false;
@@ -57,7 +58,10 @@ export async function api(props: API): Promise<APIResponse> {
       body: body ? JSON.stringify(body) : null,
     });
     const ms = Math.round(performance.now() - start);
-    logger(method, url, response.status, ms);
+
+    if (logger) {
+      Logger(method, url, response.status, ms);
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -81,10 +85,11 @@ export async function api(props: API): Promise<APIResponse> {
     isError = true;
   } finally {
     isFetching = false;
+    isLoading = false;
   }
 
   return {
-    data,
+    data: data ?? null,
     isLoading,
     isFetching,
     isError,
